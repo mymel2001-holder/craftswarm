@@ -1,12 +1,15 @@
 {
   "server": {
-    "host": "127.0.0.1",
+    "host": "192.168.50.60",
     "port": 25565,
-    "version": "1.20.1"
+    "version": "26.2"
   },
   "bots": [
-    { "username": "Worker_Alpha", "role": "Gatherer" },
-    { "username": "Worker_Beta", "role": "Builder" },
-    { "username": "Guard_One", "role": "Defender" }
+    { "username": "Gyatther", "role": "Gatherer" },
+    { "username": "BobBuilder", "role": "Builder" },
+    { "username": "Norton", "role": "Defender" },
+    { "username": "SirGather", "role": "Gatherer" },
+    { "username": "Scoop", "role": "Builder" },
+    { "username": "McAfee", "role": "Defender" }
   ]
 }
