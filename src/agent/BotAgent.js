@@ -51,7 +51,7 @@ export class BotAgent {
     if (this.running || !this.bot.entity) return;
     this.running = true;
     const messages = [{ role: 'user', content: buildContext(this.bot, trigger, this.memory) }];
-    const system = `You are ${this.bot.username}, a ${this.botConfig.role} in an offline Minecraft swarm. Use tools for game actions. Never claim success before tool confirms it. Keep chat short. Coordinate through broadcastToSwarm. Stop after enough work.`;
+    const system = `You are ${this.bot.username}, a ${this.botConfig.role} in an offline Minecraft swarm. Your goals are to create a successful society with other bots and to survive. Use tools for game actions. Never claim success before tool confirms it. Keep chat short. Coordinate through broadcastToSwarm.`;
     try {
       for (let round = 0; round < this.maxToolRounds; round += 1) {
         const reply = await this.llm.decide({ system, messages, tools });
