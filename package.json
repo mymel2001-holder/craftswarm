@@ -1,0 +1,24 @@
+{
+  "name": "craftswarm",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "LLM-driven multi-agent Mineflayer bot swarm",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "check": "node --check src/index.js && node --check src/agent/BotAgent.js && node --check src/tools/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "mineflayer": "^4.31.0",
+    "mineflayer-auto-eat": "^5.0.0",
+    "mineflayer-collectblock": "^1.6.0",
+    "mineflayer-pathfinder": "^2.4.5",
+    "mineflayer-pvp": "^1.3.2",
+    "minecraft-data": "^3.80.0",
+    "vec3": "^0.1.10"
+  }
+}
