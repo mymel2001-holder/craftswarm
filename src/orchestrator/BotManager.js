@@ -19,6 +19,7 @@ export class BotManager {
       llm: this.config.llm,
       memory: this.memory,
       maxToolRounds: this.config.agent.maxToolRounds,
+      autonomousIntervalMs: this.config.agent.autonomousIntervalMs,
       onDisconnect: (stopped) => this.reconnect(stopped)
     });
     this.agents.set(botConfig.username, agent);

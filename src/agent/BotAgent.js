@@ -16,14 +16,16 @@ const { loader: autoEat } = autoEatPackage;
 const { plugin: pvp } = pvpPackage;
 
 export class BotAgent {
-  constructor({ botConfig, server, llm, memory, maxToolRounds, onDisconnect }) {
+  constructor({ botConfig, server, llm, memory, maxToolRounds, autonomousIntervalMs, onDisconnect }) {
     this.botConfig = botConfig;
     this.server = server;
     this.memory = memory;
     this.maxToolRounds = maxToolRounds;
+    this.autonomousIntervalMs = autonomousIntervalMs;
     this.onDisconnect = onDisconnect;
     this.llm = new LLMProvider(llm);
     this.running = false;
+    this.autonomousTimer = null;
     this.createBot();
   }
 
@@ -37,14 +39,27 @@ export class BotAgent {
       this.bot.pathfinder.setMovements(new Movements(this.bot, this.bot.registry));
       this.bot.autoEat.options = { priority: 'foodPoints', startAt: 14 };
       console.log(`[${this.bot.username}] spawned.`);
-      this.run('Spawned. Inspect surroundings, coordinate, then work safely.');
-    });
-    this.bot.on('chat', (username, message) => {
-      if (username !== this.bot.username) this.run(`${username} said: ${message}`);
+      this.startAutonomy();
     });
     this.bot.on('kicked', (reason) => console.warn(`[${this.bot.username}] kicked:`, reason));
     this.bot.on('error', (error) => console.error(`[${this.bot.username}] error:`, error.message));
-    this.bot.on('end', () => this.onDisconnect(this));
+    this.bot.on('end', () => {
+      this.stopAutonomy();
+      this.onDisconnect(this);
+    });
+  }
+
+  startAutonomy() {
+    this.run('Autonomous cycle started. Observe world, select useful role work, then act.');
+    this.autonomousTimer = setInterval(() => {
+      this.run('Autonomous observation cycle. Continue role work, recover from failures, or choose next useful task.');
+    }, this.autonomousIntervalMs);
+    this.autonomousTimer.unref();
+  }
+
+  stopAutonomy() {
+    if (this.autonomousTimer) clearInterval(this.autonomousTimer);
+    this.autonomousTimer = null;
   }
 
   async run(trigger) {
@@ -69,5 +84,8 @@ export class BotAgent {
     finally { this.running = false; }
   }
 
-  quit() { this.bot.quit('CraftSwarm shutdown'); }
+  quit() {
+    this.stopAutonomy();
+    this.bot.quit('CraftSwarm shutdown');
+  }
 }

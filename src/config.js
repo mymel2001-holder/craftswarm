@@ -8,9 +8,17 @@ export async function loadConfig() {
     throw new Error('config/bots.json needs server host/port and at least one bot.');
   }
 
+  const autonomousIntervalMs = Number(process.env.AUTONOMOUS_INTERVAL_MS || 15_000);
+  if (!Number.isFinite(autonomousIntervalMs) || autonomousIntervalMs < 1_000) {
+    throw new Error('AUTONOMOUS_INTERVAL_MS must be a number of at least 1000 milliseconds.');
+  }
+
   return {
     ...config,
-    agent: { maxToolRounds: Number(process.env.AGENT_MAX_TOOL_ROUNDS || 4) },
+    agent: {
+      maxToolRounds: Number(process.env.AGENT_MAX_TOOL_ROUNDS || 4),
+      autonomousIntervalMs
+    },
     reconnectMaxDelayMs: Number(process.env.RECONNECT_MAX_DELAY_MS || 30_000),
     llm: {
       baseUrl: (process.env.LLM_BASE_URL || 'http://127.0.0.1:11434/v1').replace(/\/$/, ''),
